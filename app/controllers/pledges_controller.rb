@@ -1,5 +1,6 @@
 class PledgesController < ApplicationController
-
+  after_filter :set_access_control_headers
+  
   def index
     @pledges = Pledge.all
 
@@ -26,5 +27,11 @@ class PledgesController < ApplicationController
       end
     end
   end
-  
+
+  private
+ 
+  def set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Request-Method'] = '*'
+  end
 end
