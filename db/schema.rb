@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121110165822) do
+ActiveRecord::Schema.define(:version => 20121110190247) do
 
   create_table "inbound_emails", :force => true do |t|
     t.string   "project_id"
@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(:version => 20121110165822) do
     t.datetime "updated_at", :null => false
     t.string   "time_limit"
     t.string   "amount"
+    t.boolean  "complete"
+    t.boolean  "success"
   end
 
 end

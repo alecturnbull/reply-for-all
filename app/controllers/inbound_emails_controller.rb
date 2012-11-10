@@ -4,11 +4,23 @@ class InboundEmailsController < ApplicationController
   def receive
 
     @sender = params["from"]
-    @headers = params["headers"]
+    @recipient = params["to"]
+    @pledge_id = params["cc"] ? params["cc"].match(/([1-9][0-9]*)/)[0] : nil
 
-    DonorMailer.test(@sender, @headers).deliver
+    if @pledge_id
+      @pledge = Pledge.find(@pledge_id)
+      
+      if @pledge.recipient == nil
+        @pledge.recipient = @recipient
+        @pledge.sender = @sender
+      else 
+        @pledge.complete = true
+        @pledge.success = true
+      end
+    else
+      render :nothing => true, :status => 200
+    end
 
-    render :nothing => true, :status => 200
 
   end
 
