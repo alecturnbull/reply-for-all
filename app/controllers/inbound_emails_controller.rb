@@ -30,7 +30,7 @@ class InboundEmailsController < ApplicationController
         else
           @pledge.success = true
           resp = donate(@pledge)
-          DonorMailer.donated(@pledge.sender, resp)
+          DonorMailer.donated(@pledge.sender, resp).deliver
         end
 
       end

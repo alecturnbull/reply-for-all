@@ -9,4 +9,12 @@ class Pledge < ActiveRecord::Base
       self.expiration = sent_at + parsed_time
     end
   end
+
+  def sender_email
+    return self.sender.match(/\w+[@]\w+?[.]\w+/)
+  end
+
+  def sender_name
+    return self.sender.match(/\w+[\s]/)
+  end
 end
