@@ -66,7 +66,7 @@ class InboundEmailsController < ApplicationController
     http = Net::HTTP.new(uri)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    post = http.post(params)
+    post = http.post(uri,params)
     return post.body
   end
 
