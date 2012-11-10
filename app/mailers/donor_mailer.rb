@@ -1,6 +1,7 @@
 class DonorMailer < ActionMailer::Base
-  default from: "reply-for-all@donorschoose.com"
+  default from: "reply-for-all@donorschoose.alecturnbull.com"
 
-  def test_email(params)
+  def test(email, headers)
+    mail(:to => email, :subject => "Donors Choose received email", :body => headers)
   end
 end
