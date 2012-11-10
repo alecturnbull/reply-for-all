@@ -10,6 +10,7 @@ class InboundEmailsController < ApplicationController
     if @pledge_id
       @pledge = Pledge.find(@pledge_id)
       
+
       if @pledge.recipient == nil
         @pledge.recipient = @recipient
         @pledge.sender = @sender
@@ -21,7 +22,7 @@ class InboundEmailsController < ApplicationController
       @pledge.save!
       render :nothing => true, :status => 200
     else
-      render :nothing => true, :status => 200
+      render :nothing => true, :status => 404
     end
 
 
