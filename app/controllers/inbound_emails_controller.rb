@@ -17,6 +17,9 @@ class InboundEmailsController < ApplicationController
         @pledge.complete = true
         @pledge.success = true
       end
+
+      @pledge.save
+      render :nothing => true, :status => 200
     else
       render :nothing => true, :status => 200
     end
