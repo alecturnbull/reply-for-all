@@ -27,11 +27,14 @@ class InboundEmailsController < ApplicationController
         if Time.now > @pledge.expiration
           # it expired, no donation
           @pledge.success = false
+          subject = "Really?"
+          body = "You couldn't just answer the email in time? We wanted to give #{@pledge.amount} dollars to Donor's Choose. But I guess that's not happening now, is it?"
+          DonorMailer.failed(@pledge.recipient, subject, body).deliver
         else
           @pledge.success = true
           resp = donate(@pledge)
-          amt = "Amount remaining: #{resp.remainingProposalAmount}. URL: #{resp.proposalURL}"
-          DonorMailer.donated(@pledge.sender, amt).deliver
+          body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donor's Choose for #{@pledge.amount} dollars. The project has #{resp.remainingProposalAmount} remaining. You can see it here: #{resp.proposalURL}"
+          DonorMailer.donated(@pledge.sender, body).deliver
         end
 
       end
