@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  project_id: MyString
+  expiration: 2012-11-10 11:32:41
+  sent_at: 2012-11-10 11:32:41
+  sender: MyString
+  recipient: MyString
+
+two:
+  project_id: MyString
+  expiration: 2012-11-10 11:32:41
+  sent_at: 2012-11-10 11:32:41
+  sender: MyString
+  recipient: MyString

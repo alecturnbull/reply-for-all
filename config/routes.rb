@@ -1,4 +1,9 @@
 DonorsChoose::Application.routes.draw do
+
+  post 'mail', :to => "inbound_emails#receive"
+
+  resources :pledges, :only => [:index, :create]
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
