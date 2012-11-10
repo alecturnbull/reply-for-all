@@ -3,6 +3,9 @@ class InboundEmailsController < ApplicationController
 
   def receive
 
+    @header_parse = params["headers"].match(/[>][;][\s](.*?)[)]/)[0].gsub(">; ", "")
+
+    @sent_at = DateTime.parse(@header_parse)
     @sender = params["from"]
     @recipient = params["to"]
     @pledge_id = params["cc"] ? params["cc"].match(/([1-9][0-9]*)/)[0] : nil
@@ -14,6 +17,7 @@ class InboundEmailsController < ApplicationController
       if @pledge.recipient == nil
         @pledge.recipient = @recipient
         @pledge.sender = @sender
+        @pledge.sent_at = @sent_at
       else 
         @pledge.complete = true
         @pledge.success = true
