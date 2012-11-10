@@ -63,10 +63,10 @@ class InboundEmailsController < ApplicationController
       APIKey: "DONORSCHOOSE",
       apipassword: "helpClassrooms!"
     }
-    http = Net::HTTP.new
+    http = Net::HTTP.new(uri)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    post = http.post(uri, params)
+    post = http.post(params)
     return post.body
   end
 
