@@ -11,7 +11,7 @@ class InboundEmailsController < ApplicationController
     if @pledge.recipient = nil
       @pledge.recipient = @recipient
       @pledge.sender = @sender
-
+      @pledge.save
       # first email being sent
       # save data to pledge
     else 
@@ -20,10 +20,8 @@ class InboundEmailsController < ApplicationController
       # donate
     end
 
-    @inbound_email = InboundEmail.new( :sender => clean_field(params["to"]),
-                                       :recipient => clean_field(params["from"]),
-                                     ) 
 
+    render :status => 200
 
   end
 
