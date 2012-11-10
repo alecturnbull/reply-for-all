@@ -1,11 +1,7 @@
 class InboundEmailsController < ApplicationController
+  skip_before_filter :verify_authenticity_token
 
   def receive
-    if params["cc"]
-      @pledge_id = params["cc"].match(/[1-9][0-9]*/).to_i
-    else
-      @pledge_id = nil
-    end
 
     @recipient = params["to"]
     @sender = params["from"]
