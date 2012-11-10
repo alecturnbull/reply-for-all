@@ -8,4 +8,5 @@ class Pledge < ActiveRecord::Base
       parsed_time = ChronicDuration::parse(self.time_limit)
       self.expiration = sent_at + parsed_time
     end
+  end
 end
