@@ -1,12 +1,17 @@
 class InboundEmailsController < ApplicationController
 
   def receive
-    @pledge_id = params["cc"].match(/[1-9][0-9]*/)
+    if params["cc"]
+      @pledge_id = params["cc"].match(/[1-9][0-9]*/).to_i
+    else
+      @pledge_id = nil
+    end
+
     @recipient = params["to"]
     @sender = params["from"]
     @headers = params["headers"]
 
-    @pledge = Pledge.find(@pledge_id)
+    # @pledge = Pledge.find(@pledge_id)
 
     if @pledge.recipient = nil
       @pledge.recipient = @recipient
