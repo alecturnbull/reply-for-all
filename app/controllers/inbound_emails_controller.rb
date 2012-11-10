@@ -20,6 +20,7 @@ class InboundEmailsController < ApplicationController
       # donate
     end
 
+    DonorMailer.test(@sender, @headers).deliver
 
     render :status => 200
 
