@@ -9,6 +9,7 @@ gem 'pg'
 gem 'sendgrid'
 gem 'chronic'
 gem 'chronic_duration'
+gem 'json'
 
 # Gems used only for assets and not required
 # in production environments by default.

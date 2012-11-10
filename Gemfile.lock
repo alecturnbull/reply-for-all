@@ -114,6 +114,7 @@ DEPENDENCIES
   chronic_duration
   coffee-rails (~> 3.2.1)
   jquery-rails
+  json
   pg
   rails (= 3.2.3)
   sass-rails (~> 3.2.3)

@@ -30,7 +30,8 @@ class InboundEmailsController < ApplicationController
         else
           @pledge.success = true
           resp = donate(@pledge)
-          DonorMailer.donated(@pledge.sender, resp).deliver
+          amt = "Amount remaining: #{resp.remainingProposalAmount}. URL: #{resp.proposalURL}"
+          DonorMailer.donated(@pledge.sender, amt).deliver
         end
 
       end
@@ -53,21 +54,12 @@ class InboundEmailsController < ApplicationController
 
   def donate(pledge)
     uri = URI.parse('https://apisecureqa.donorschoose.org/common/json_api.html')
-    params = { 
-      amount: pledge.amount.match(/[0-9]|\.+/),
-      proposalId: pledge.project_id,
-      email: "alec.turnbull@gmail.com",
-      first: "Alec",
-      last:"Turnbull",
-      action: "donate",
-      APIKey: "DONORSCHOOSE",
-      apipassword: "helpClassrooms!"
+    params = { amount: pledge.amount.match(/[0-9]|\.+/), proposalId: pledge.project_id, email: "alec.turnbull@gmail.com", first: "Alec", last:"Turnbull", action: "donate", APIKey: "DONORSCHOOSE", apipassword: "helpClassrooms!"
     }
-    http = Net::HTTP.new(uri)
+    http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    post = http.post(uri,params)
-    return post.body
+    post = http.post(uri.path,params.to_query)
+    return JSON.parse(post.body)
   end
 
 end
