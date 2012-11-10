@@ -1,3 +1,6 @@
+require "uri"
+require "net/http"
+
 class InboundEmailsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
@@ -18,15 +21,24 @@ class InboundEmailsController < ApplicationController
         @pledge.recipient = @recipient
         @pledge.sender = @sender
         @pledge.sent_at = @sent_at
+
       else 
         @pledge.complete = true
-        @pledge.success = true
+        if Time.now > @pledge.expiration
+          # it expired, no donation
+          @pledge.success = false
+        else
+          @pledge.success = true
+          resp = donate(@pledge)
+          DonorMailer.donated(@pledge.sender, resp)
+        end
+
       end
 
       @pledge.save!
       render :nothing => true, :status => 200
     else
-      render :nothing => true, :status => 404
+      render :nothing => true, :status => 200
     end
 
 
@@ -38,4 +50,21 @@ class InboundEmailsController < ApplicationController
   def clean_field(input_string)
     input_string.gsub(/\n/,'') if input_string
   end
+
+  def donate(pledge)
+    uri = URI.parse('https://apisecurqa.donorschoose.org/common/json_api.html')
+    params = { 
+      amount: pledge.amount.match(/[A-Za-z$-\s]/g),
+      proposalId: pledge.project_id,
+      email: "alec.turnbull@gmail.com",
+      first: "Alec",
+      last:"Turnbull",
+      action: "donate",
+      APIKey: "DONORSCHOOSE",
+      apipassword: "helpClassrooms!"
+    }
+    post = Net::HTTP.post_form(uri, params)
+    return post.body
+  end
+
 end
