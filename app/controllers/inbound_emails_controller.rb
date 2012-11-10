@@ -28,13 +28,16 @@ class InboundEmailsController < ApplicationController
           # it expired, no donation
           @pledge.success = false
           subject = "Really?"
-          body = "You couldn't just answer the email in time? We wanted to give #{@pledge.amount} dollars to Donor's Choose. But I guess that's not happening now, is it?"
+          body = "You couldn't just answer the email in time? We wanted to give $#{@pledge.amount} dollars to Donors Choose. But I guess that's not happening now, is it?"
           DonorMailer.failed(@pledge.recipient, subject, body).deliver
+          
+          render :nothing => true, :status => 200
         else
           @pledge.success = true
           resp = donate(@pledge)
-          body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donor's Choose for #{@pledge.amount} dollars. The project has #{resp.remainingProposalAmount} remaining. You can see it here: #{resp.proposalURL}"
+          body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donors Choose for $#{@pledge.amount}. The project has #{resp.remainingProposalAmount} remaining. You can see it here: #{resp.proposalURL}"
           DonorMailer.donated(@pledge.sender, body).deliver
+          render :nothing => true, :status => 200
         end
 
       end
@@ -57,7 +60,16 @@ class InboundEmailsController < ApplicationController
 
   def donate(pledge)
     uri = URI.parse('https://apisecureqa.donorschoose.org/common/json_api.html')
-    params = { amount: pledge.amount.match(/[0-9]|\.+/), proposalId: pledge.project_id, email: "alec.turnbull@gmail.com", first: "Alec", last:"Turnbull", action: "donate", APIKey: "DONORSCHOOSE", apipassword: "helpClassrooms!"
+    params = { 
+      hackathon: "true", 
+      amount: pledge.amount.match(/[0-9]|\.+/), 
+      proposalId: pledge.project_id, 
+      email: pledge.sender_email, 
+      first: pledge.first_name, 
+      last:pledge.last_name, 
+      action: "donate", 
+      APIKey: "DONORSCHOOSE", 
+      apipassword: "helpClassrooms!"
     }
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true

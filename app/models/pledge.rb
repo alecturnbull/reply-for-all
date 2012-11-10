@@ -11,10 +11,19 @@ class Pledge < ActiveRecord::Base
   end
 
   def sender_email
-    return self.sender.match(/\w+[@]\w+?[.]\w+/)
+    return self.sender.split("<")[1].gsub(">", "")
   end
 
   def sender_name
-    return self.sender.match(/\w+[\s]/)
+    return self.sender.split("<")[0].strip
   end
+
+  def first_name
+    return self.sender_name.split(" ")[0]
+  end
+
+  def last_name
+    return self.sender_name.split(" ")[1]
+  end
+
 end
