@@ -52,7 +52,7 @@ class InboundEmailsController < ApplicationController
   end
 
   def donate(pledge)
-    uri = URI.parse('https://apisecurqa.donorschoose.org/common/json_api.html')
+    uri = URI.parse('https://apisecureqa.donorschoose.org/common/json_api.html')
     params = { 
       amount: pledge.amount.match(/[0-9]|\.+/),
       proposalId: pledge.project_id,
