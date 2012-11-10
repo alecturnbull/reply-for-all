@@ -30,14 +30,12 @@ class InboundEmailsController < ApplicationController
           subject = "Really?"
           body = "You couldn't just answer the email in time? We wanted to give $#{@pledge.amount} dollars to Donors Choose. But I guess that's not happening now, is it?"
           DonorMailer.failed(@pledge.recipient, subject, body).deliver
-          
-          render :nothing => true, :status => 200
         else
           @pledge.success = true
           resp = donate(@pledge)
+
           body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donors Choose for $#{@pledge.amount}. The project has #{resp.remainingProposalAmount} remaining. You can see it here: #{resp.proposalURL}"
           DonorMailer.donated(@pledge.sender, body).deliver
-          render :nothing => true, :status => 200
         end
 
       end
@@ -74,7 +72,7 @@ class InboundEmailsController < ApplicationController
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     post = http.post(uri.path,params.to_query)
-    return JSON.parse(post.body)
+    return post.body
   end
 
 end
