@@ -33,7 +33,7 @@ class InboundEmailsController < ApplicationController
         else
           @pledge.success = true
           resp = donate(@pledge)
-          body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donors Choose for $#{@pledge.amount}. The project has #{resp.remainingProposalAmount} remaining. You can see it here: #{resp.proposalURL}"
+          body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donors Choose for $#{@pledge.amount}. The project has responded #{resp}"
           DonorMailer.donated(@pledge.sender, body).deliver
         end
 
