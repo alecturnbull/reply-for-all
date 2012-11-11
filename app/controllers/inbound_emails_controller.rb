@@ -16,31 +16,33 @@ class InboundEmailsController < ApplicationController
     if @pledge_id
       @pledge = Pledge.find(@pledge_id)
       
+      if @pledge.complete == false
 
-      if @pledge.recipient == nil
-        @pledge.recipient = @recipient
-        @pledge.sender = @sender
-        @pledge.sent_at = @sent_at
+        if @pledge.recipient == nil
+          @pledge.recipient = @recipient
+          @pledge.sender = @sender
+          @pledge.sent_at = @sent_at
 
-      else 
-        @pledge.complete = true
-        if Time.now > @pledge.expiration
-          # it expired, no donation
-          @pledge.success = false
-          subject = "Really?"
-          body = "You couldn't just answer the email in time? We wanted to give $#{@pledge.amount} dollars to Donors Choose. But I guess that's not happening now, is it?"
-          DonorMailer.failed(@pledge.recipient, subject, body).deliver
-        else
-          @pledge.success = true
-          resp = donate(@pledge)
-          body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donors Choose for $#{@pledge.amount}. The project has responded #{resp}"
-          DonorMailer.donated(@pledge.sender, body).deliver
+        else 
+          @pledge.complete = true
+          if Time.now > @pledge.expiration
+            # it expired, no donation
+            @pledge.success = false
+            subject = "Really?"
+            body = "You couldn't just answer the email in time? We wanted to give $#{@pledge.amount} dollars to Donors Choose. But I guess that's not happening now, is it?"
+            DonorMailer.failed(@pledge.recipient, subject, body).deliver
+          else
+            @pledge.success = true
+            resp = donate(@pledge)
+            body = "Congratulations! You just fought email laziness for good. We've put through your donation to Donors Choose for $#{@pledge.amount}. "
+            DonorMailer.donated(@pledge.sender, body).deliver
+          end
+
         end
 
+        @pledge.save!
+        render :nothing => true, :status => 200
       end
-
-      @pledge.save!
-      render :nothing => true, :status => 200
     else
       render :nothing => true, :status => 200
     end
